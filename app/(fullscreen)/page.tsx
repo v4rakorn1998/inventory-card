@@ -140,11 +140,13 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <Link href="/register" className="block">
-            <Button variant="outline" className="w-full h-11 bg-background border-border hover:bg-muted/50 text-emerald-700 border-emerald-200 hover:border-emerald-300 hover:bg-emerald-50" type="button">
+          {/* ตัวอย่างในหน้า Login: Comment ส่วนนี้ออก */}
+          {/* <Link href="/register" className="block">
+            <Button variant="outline" className="w-full h-11 ...">
               สมัครสมาชิกใหม่
             </Button>
-          </Link>
+          </Link> 
+          */}
         </form>
       </div>
     </div>
