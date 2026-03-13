@@ -47,7 +47,7 @@ export function AppBreadcrumb() {
             <BreadcrumbList>
                 <BreadcrumbItem>
                     <BreadcrumbLink asChild>
-                        <Link href="/dashboard" className="flex items-center gap-1.5 hover:text-primary transition-colors">
+                        <Link href="/card-album" className="flex items-center gap-1.5 hover:text-primary transition-colors">
                             <HomeIcon className="h-4 w-4" />
                             <span>หน้าหลัก</span>
                         </Link>
@@ -65,7 +65,7 @@ export function AppBreadcrumb() {
       <BreadcrumbList>
         <BreadcrumbItem className="hidden md:block">
           <BreadcrumbLink asChild>
-            <Link href="/dashboard" className="flex items-center gap-1.5 text-muted-foreground hover:text-primary transition-colors">
+            <Link href="/card-album" className="flex items-center gap-1.5 text-muted-foreground hover:text-primary transition-colors">
               <HomeIcon className="h-4 w-4" />
             </Link>
           </BreadcrumbLink>

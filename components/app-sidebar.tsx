@@ -55,14 +55,13 @@ const data: {
     id: "user-1",
     name: "User",
     email: "user@example.com",
-    // ✅ แก้ไขลิงก์รูปโปรไฟล์ตรงนี้ เพื่อไม่ให้ติด Error 404
     avatar: "https://ui-avatars.com/api/?name=User&background=0D8ABC&color=fff&bold=true",
   },
   navGroups: [
     {
       title: "Inventory",
       items: [
-        { title: "Card Album", url: "/card-album", icon: NotebookTabs, isActive: true ,permission: "view:employees"},
+        { title: "Card Album", url: "/card-album", icon: NotebookTabs, isActive: true},
       ]
     }
   ],
@@ -92,7 +91,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild className="hover:bg-transparent">
-              <Link href="/dashboard">
+              <Link href="/card-album">
                 <div className="bg-linear-to-br from-blue-600 to-indigo-600 text-white flex aspect-square size-9 items-center justify-center rounded-xl shadow-sm">
                   <Command className="size-5" />
                 </div>

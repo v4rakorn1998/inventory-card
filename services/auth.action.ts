@@ -59,7 +59,7 @@ export async function register(username: string, password: string, displayName: 
     .select('username')
     .eq('username', username)
     .single()
-
+  
   if (existingUser) {
     return { error: 'ชื่อผู้ใช้นี้มีคนใช้ไปแล้วครับ' }
   }
