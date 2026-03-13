@@ -1,4 +1,3 @@
-// app/(inventory)/card-album/components/delete-card-button.tsx
 "use client"
 
 import { useState } from "react"
@@ -14,35 +13,39 @@ export function DeleteCardButton({ id, cardCode }: { id: number, cardCode: strin
 
   const handleDelete = async () => {
     setIsPending(true)
-    const res = await deleteCard(id)
-    setIsPending(false)
-    
-    if (res?.error) {
-      toast.error(res.error)
-    } else {
-      toast.success("ลบการ์ดออกจากคลังเรียบร้อยแล้ว")
-      setOpen(false)
+    try {
+      const res = await deleteCard(id)
+      if (res?.error) {
+        toast.error(res.error)
+      } else {
+        toast.success("ลบการ์ดออกจากคลังเรียบร้อยแล้ว")
+        setOpen(false)
+      }
+    } catch (error) {
+      toast.error("เกิดข้อผิดพลาดในการลบ")
+    } finally {
+      setIsPending(false)
     }
   }
 
   return (
     <>
       <DropdownMenuItem 
-        className="text-destructive focus:text-destructive cursor-pointer"
+        className="text-destructive focus:text-destructive cursor-pointer rounded-xl h-10 font-bold focus:bg-destructive/10"
         onSelect={(e) => {
           e.preventDefault()
           setOpen(true)
         }}
       >
-        <Trash2Icon className="mr-2 h-4 w-4" /> ลบการ์ด
+        <Trash2Icon className="mr-3 h-4 w-4" /> Delete Card
       </DropdownMenuItem>
 
       <ConfirmDialog
         open={open}
         onOpenChange={setOpen}
-        title="ยืนยันการลบการ์ด"
-        description={`คุณแน่ใจหรือไม่ว่าต้องการลบการ์ดรหัส "${cardCode}"? การกระทำนี้ไม่สามารถย้อนกลับได้`}
-        confirmText={isPending ? "กำลังดำเนินการ..." : "ยืนยันการลบ"}
+        title="Confirm Deletion"
+        description={`คุณแน่ใจหรือไม่ว่าต้องการลบการ์ดรหัส "${cardCode}"? ข้อมูลนี้จะหายไปจากคลังสมบัติของคุณทันที`}
+        confirmText={isPending ? "Deleting..." : "Confirm Delete"}
         variant="destructive"
         onConfirm={handleDelete}
       />

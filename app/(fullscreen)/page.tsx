@@ -2,17 +2,17 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Card, CardHeader, CardTitle, CardContent, CardFooter, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { login } from "@/services/auth.action"; // ตรวจสอบ path นี้ให้ถูกต้อง
+import { login } from "@/services/auth.action";
 import { toast } from "sonner";
-import { KeyRoundIcon, UserIcon, CommandIcon, Loader2 } from "lucide-react";
+import { KeyRoundIcon, UserIcon, HandCoinsIcon, Loader2, ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [username, setUsername] = useState(""); // เปลี่ยนจาก email เป็น username ตามตาราง DB
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -21,7 +21,6 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      // เรียกใช้ Server Action
       const result = await login(username, password);
       
       if (result?.error) {
@@ -32,7 +31,7 @@ export default function LoginPage() {
       
       toast.success('ยินดีต้อนรับท่านมหาเศรษฐี!');
       router.push("/card-album"); 
-      router.refresh(); // บังคับให้ Middleware เช็คค่า cookie ใหม่ทันที
+      router.refresh();
       
     } catch (err) {
       toast.error('ระบบขัดข้องนิดหน่อย ลองใหม่อีกครั้งนะครับ');
@@ -41,46 +40,71 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto space-y-6 pt-12">
-      <div className="flex flex-col items-center gap-2 text-center">
-        <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm">
-          <CommandIcon className="h-7 w-7" />
+    <div className="flex w-full max-w-[1000px] overflow-hidden rounded-2xl bg-card shadow-2xl border border-border/50">
+      {/* ฝั่งซ้าย: Branding & Visual - โทนเขียวเหนี่ยวทรัพย์ */}
+      <div className="hidden md:flex w-1/2 flex-col justify-between bg-emerald-600 p-12 text-white relative overflow-hidden">
+        {/* Background Decoration - Soft Glows */}
+        <div className="absolute top-[-10%] right-[-10%] w-64 h-64 bg-white/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-[-10%] left-[-10%] w-64 h-64 bg-teal-500/20 rounded-full blur-3xl" />
+        
+        <div className="relative z-10 flex items-center gap-2">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/20 backdrop-blur-sm shadow-inner">
+            <HandCoinsIcon className="h-6 w-6 text-white" />
+          </div>
+          <span className="text-xl font-bold tracking-tight">Inventory Card</span>
         </div>
-        <h1 className="text-3xl font-bold tracking-tight mt-2">Inventory Card</h1>
-        <p className="text-sm text-muted-foreground">คนจะรวยช่วยไม่ได้</p>
+
+        <div className="relative z-10 space-y-4">
+          <h2 className="text-4xl font-extrabold leading-tight">
+            Manage your collection <br /> Like a Billionaire.
+          </h2>
+          <p className="text-emerald-50/80 text-lg">
+            ระบบจัดการคลังการ์ดที่ช่วยให้คุณติดตามมูลค่าและกำไร <br />
+            ได้อย่างแม่นยำ "คนจะรวยช่วยไม่ได้"
+          </p>
+        </div>
+
+        <div className="relative z-10 text-sm font-medium text-emerald-100/60">
+          © 2026 Inventory Card System. All rights reserved.
+        </div>
       </div>
 
-      <form onSubmit={handleLogin}>
-        <Card className="shadow-lg border-primary/10">
-          <CardHeader className="space-y-1 text-center pb-6">
-            <CardTitle className="text-2xl font-semibold">ยินดีต้อนรับเศรษฐีหน้าใหม่</CardTitle>
-            <CardDescription className="text-sm">
-              กรุณากรอกชื่อผู้ใช้และรหัสผ่านเพื่อเข้าสู่ระบบ
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+      {/* ฝั่งขวา: Login Form */}
+      <div className="w-full md:w-1/2 p-8 md:p-12 bg-card">
+        <div className="mb-10 text-center md:text-left">
+          <div className="md:hidden flex justify-center mb-6">
+             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-600 text-white shadow-lg">
+                <HandCoinsIcon className="h-7 w-7" />
+             </div>
+          </div>
+          <h1 className="text-3xl font-bold tracking-tight mb-2 text-foreground">เข้าสู่ระบบ</h1>
+          <p className="text-muted-foreground">กรอกข้อมูลเพื่อเข้าถึงคลังเก็บสมบัติของคุณ</p>
+        </div>
+
+        <form onSubmit={handleLogin} className="space-y-6">
+          <div className="space-y-5">
             <div className="space-y-2">
               <Label htmlFor="username">ชื่อผู้ใช้งาน (Username)</Label>
-              <div className="relative">
-                <UserIcon className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+              <div className="relative group">
+                <UserIcon className="absolute left-3 top-3 h-4 w-4 text-muted-foreground group-focus-within:text-emerald-600 transition-colors" />
                 <Input 
                   id="username" 
-                  type="text" 
                   placeholder="Username ของคุณ" 
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   required
                   disabled={isLoading}
-                  className="pl-9"
+                  className="pl-10 h-11 bg-muted/30 border-muted-foreground/20 focus:bg-background transition-all focus-visible:ring-emerald-500"
                 />
               </div>
             </div>
+
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password">รหัสผ่าน</Label>
               </div>
-              <div className="relative">
-                <KeyRoundIcon className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+              <div className="relative group">
+                <KeyRoundIcon className="absolute left-3 top-3 h-4 w-4 text-muted-foreground group-focus-within:text-emerald-600 transition-colors" />
                 <Input 
                   id="password" 
                   type="password" 
@@ -89,24 +113,40 @@ export default function LoginPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   disabled={isLoading}
-                  className="pl-9"
+                  className="pl-10 h-11 bg-muted/30 border-muted-foreground/20 focus:bg-background transition-all focus-visible:ring-emerald-500"
                 />
               </div>
             </div>
-          </CardContent>
-          <CardFooter className="pt-2">
-            <Button className="w-full text-md h-10" type="submit" disabled={isLoading}>
-              {isLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> กำลังตรวจสอบ...
-                </>
-              ) : (
-                "เข้าสู่ระบบ"
-              )}
+          </div>
+
+          <Button className="w-full h-11 text-md font-semibold bg-emerald-600 hover:bg-emerald-700 shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/30 transition-all group" type="submit" disabled={isLoading}>
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" /> กำลังตรวจสอบ...
+              </>
+            ) : (
+              <span className="flex items-center justify-center gap-2">
+                เข้าสู่ระบบ <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              </span>
+            )}
+          </Button>
+
+          <div className="relative py-2">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t border-border" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-card px-2 text-muted-foreground">ยังไม่มีบัญชี?</span>
+            </div>
+          </div>
+
+          <Link href="/register" className="block">
+            <Button variant="outline" className="w-full h-11 bg-background border-border hover:bg-muted/50 text-emerald-700 border-emerald-200 hover:border-emerald-300 hover:bg-emerald-50" type="button">
+              สมัครสมาชิกใหม่
             </Button>
-          </CardFooter>
-        </Card>
-      </form>
+          </Link>
+        </form>
+      </div>
     </div>
   );
 }

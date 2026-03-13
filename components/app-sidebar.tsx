@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import {
-  Command,
+  HandCoinsIcon, // เปลี่ยนเป็นรูปเงินให้เข้าเซต
   type LucideIcon,
   NotebookTabs,
 } from "lucide-react"
@@ -50,16 +50,16 @@ const data: {
 } = {
   user: {
     id: "user-1",
-    name: "User",
-    email: "user@example.com",
-    avatar: "https://ui-avatars.com/api/?name=User&background=0D8ABC&color=fff&bold=true",
+    name: "มหาเศรษฐี",
+    email: "rich@example.com",
+    avatar: "https://ui-avatars.com/api/?name=Rich&background=10b981&color=fff&bold=true",
   },
   navGroups: [
     {
       title: "Inventory",
       items: [
         { 
-          title: "Card Album", 
+          title: "คลังเก็บการ์ด", 
           url: "/card-album", 
           icon: NotebookTabs, 
         },
@@ -72,18 +72,18 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname()
 
   return (
-    <Sidebar variant="inset" {...props}>
-      <SidebarHeader className="py-4">
+    <Sidebar variant="inset" {...props} className="border-r-0">
+      <SidebarHeader className="py-6">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg" asChild className="hover:bg-transparent">
+            <SidebarMenuButton size="lg" asChild className="hover:bg-transparent focus-visible:ring-0">
               <Link href="/card-album">
-                <div className="bg-linear-to-br from-blue-600 to-indigo-600 text-white flex aspect-square size-9 items-center justify-center rounded-xl shadow-sm">
-                  <Command className="size-5" />
+                <div className="bg-linear-to-br from-emerald-500 to-teal-700 text-white flex aspect-square size-10 items-center justify-center rounded-xl shadow-lg shadow-emerald-500/20">
+                  <HandCoinsIcon className="size-6" />
                 </div>
-                <div className="grid flex-1 text-left text-sm leading-tight ml-1">
-                  <span className="truncate font-bold text-base tracking-tight">Inventory Card</span>
-                  <span className="truncate text-xs text-muted-foreground font-medium">คนจะรวยช่วยไม่ได้</span>
+                <div className="grid flex-1 text-left text-sm leading-tight ml-3">
+                  <span className="truncate font-bold text-base tracking-tight text-emerald-950 dark:text-emerald-50">Inventory Card</span>
+                  <span className="truncate text-xs text-emerald-600 dark:text-emerald-400 font-medium">คนจะรวยช่วยไม่ได้</span>
                 </div>
               </Link>
             </SidebarMenuButton>
@@ -91,35 +91,44 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       
-      <SidebarContent className="px-2">
+      <SidebarContent className="px-3">
         {data.navGroups.map((group) => (
-          <SidebarGroup key={group.title}>
-            <SidebarGroupLabel className="text-xs font-semibold text-primary/70 uppercase tracking-wider">
+          <SidebarGroup key={group.title} className="py-2">
+            <SidebarGroupLabel className="text-[10px] font-bold text-emerald-800/40 dark:text-emerald-400/40 uppercase tracking-[0.2em] px-2 mb-2">
               {group.title}
             </SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {group.items.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton 
-                      asChild 
-                      isActive={pathname.startsWith(item.url)}
-                      tooltip={item.title}
-                    >
-                      <Link href={item.url}>
-                        <item.icon />
-                        <span>{item.title}</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
+                {group.items.map((item) => {
+                  const isActive = pathname.startsWith(item.url);
+                  return (
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton 
+                        asChild 
+                        isActive={isActive}
+                        tooltip={item.title}
+                        className={`
+                          transition-all duration-200 h-11 px-3 rounded-lg mb-1
+                          ${isActive 
+                            ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400 font-bold shadow-sm border border-emerald-100/50 dark:border-emerald-500/20" 
+                            : "hover:bg-emerald-50/50 dark:hover:bg-emerald-500/5 text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-300"}
+                        `}
+                      >
+                        <Link href={item.url} className="flex items-center gap-3">
+                          <item.icon className={`size-5 ${isActive ? "text-emerald-600" : "opacity-70"}`} />
+                          <span className="text-sm">{item.title}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  );
+                })}
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
         ))}
       </SidebarContent>
       
-      <SidebarFooter className="px-2 py-4">
+      <SidebarFooter className="px-3 py-6 border-t border-emerald-50 dark:border-emerald-900/20">
         <NavUser user={data.user} />
       </SidebarFooter>
     </Sidebar>
