@@ -8,7 +8,6 @@ import {
 } from "lucide-react"
 import { usePathname } from "next/navigation"
 
-import { NavMain } from "@/components/nav-main"
 import { NavUser } from "@/components/nav-user"
 import {
   Sidebar,
@@ -20,9 +19,8 @@ import {
   SidebarMenuItem,
   SidebarGroup,
   SidebarGroupLabel,
-  SidebarMenuSkeleton
+  SidebarGroupContent,
 } from "@/components/ui/sidebar"
-import { usePermissions } from "@/components/providers/permission-provider"
 import Link from "next/link"
 
 type NavItem = {
@@ -30,7 +28,6 @@ type NavItem = {
   url: string
   icon: LucideIcon
   isActive?: boolean
-  permission?: string
   items?: {
     title: string
     url: string
@@ -61,7 +58,11 @@ const data: {
     {
       title: "Inventory",
       items: [
-        { title: "Card Album", url: "/card-album", icon: NotebookTabs, isActive: true},
+        { 
+          title: "Card Album", 
+          url: "/card-album", 
+          icon: NotebookTabs, 
+        },
       ]
     }
   ],
@@ -69,21 +70,6 @@ const data: {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname()
-  const { hasPermission, isLoading } = usePermissions()
-
-  const allowedGroups = data.navGroups.map(group => {
-    const filteredItems = group.items.filter((item) => {
-      if (!item.permission) return true;
-      return hasPermission(item.permission);
-    }).map((item) => {
-      const isChildActive = item.items?.some((subItem) => 
-        subItem.url !== "#" && pathname.startsWith(subItem.url)
-      )
-      return { ...item, isActive: isChildActive || pathname.startsWith(item.url) }
-    });
-
-    return { ...group, items: filteredItems };
-  }).filter(group => group.items.length > 0);
 
   return (
     <Sidebar variant="inset" {...props}>
@@ -96,8 +82,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <Command className="size-5" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight ml-1">
-                  <span className="truncate font-bold text-base tracking-tight">HRX</span>
-                  <span className="truncate text-xs text-muted-foreground font-medium">I Progress X</span>
+                  <span className="truncate font-bold text-base tracking-tight">Inventory Card</span>
+                  <span className="truncate text-xs text-muted-foreground font-medium">คนจะรวยช่วยไม่ได้</span>
                 </div>
               </Link>
             </SidebarMenuButton>
@@ -106,21 +92,31 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       
       <SidebarContent className="px-2">
-        {isLoading ? (
-          <SidebarGroup>
-            <SidebarMenu>
-              {Array.from({ length: 5 }).map((_, index) => (
-                <SidebarMenuItem key={index} className="py-1">
-                  <SidebarMenuSkeleton showIcon />
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
+        {data.navGroups.map((group) => (
+          <SidebarGroup key={group.title}>
+            <SidebarGroupLabel className="text-xs font-semibold text-primary/70 uppercase tracking-wider">
+              {group.title}
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {group.items.map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton 
+                      asChild 
+                      isActive={pathname.startsWith(item.url)}
+                      tooltip={item.title}
+                    >
+                      <Link href={item.url}>
+                        <item.icon />
+                        <span>{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
           </SidebarGroup>
-        ) : (
-          allowedGroups.map((group, index) => (
-            <NavMain key={index} title={group.title} items={group.items} />
-          ))
-        )}
+        ))}
       </SidebarContent>
       
       <SidebarFooter className="px-2 py-4">
